@@ -1,6 +1,19 @@
+using System.Text;
+using Library.Business.Services.Impl;
+using Library.Business.Services;
 using Library.DataAccess;
 using Library.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.FileProviders;
+using Library.Api.Middlewares;
+using FluentValidation;
+using Library.Business.MappingProfiles;
+using Library.Business.Models.Validators;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Cors.Infrastructure;
+using Library.Api;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +22,60 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger();
 builder.Services.AddDataAccess(builder.Configuration);
+builder.Services.AddAutoMapper(typeof(IMapperMarker));
+builder.Services.AddSignalR();
+builder.Services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
+builder.Services.AddTransient<IFileService, FileService>();
+builder.Services.AddTransient<IBookService, BookService>();
+builder.Services.AddTransient<IAuthorService, AuthorService>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IValidationService, ValidationService>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AuthenticatedUser", policy =>
+        policy.RequireAuthenticatedUser());
+
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+    });
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:SecretKey"]))
+    };
+
+});
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -21,12 +84,38 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-using var scope = app.Services.CreateScope();
+app.UseCors("CorsPolicy");
 
-await SeedData.SeedDatabaseAsync(scope.ServiceProvider.GetRequiredService<DatabaseContext>(), scope.ServiceProvider.GetRequiredService<UserManager<User>>());
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "Uploads")),
+    RequestPath = "/Resources",
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append(
+            "Cache-Control", "public,max-age=600");
+        var corsService = ctx.Context.RequestServices.GetRequiredService<ICorsService>();
+        var corsPolicyProvider = ctx.Context.RequestServices.GetRequiredService<ICorsPolicyProvider>();
+        var policy = corsPolicyProvider.GetPolicyAsync(ctx.Context, "CorsPolicy")
+                        .ConfigureAwait(false)
+                        .GetAwaiter().GetResult();
+
+        var corsResult = corsService.EvaluatePolicy(ctx.Context, policy);
+
+        corsService.ApplyResult(corsResult, ctx.Context.Response);
+    }
+});
+
+
+using var scope = app.Services.CreateScope();
+await SeedData.SeedDatabaseAsync(scope.ServiceProvider.GetRequiredService<DatabaseContext>(),
+    scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>(),
+    scope.ServiceProvider.GetRequiredService<IUnitOfWork>());
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

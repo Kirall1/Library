@@ -1,7 +1,14 @@
-﻿namespace Library.DataAccess
+﻿using Library.DataAccess.Entities;
+using Library.DataAccess.Repositories.Impl;
+using Microsoft.AspNetCore.Identity;
+
+namespace Library.DataAccess
 {
-    internal interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         public Task SaveChangesAsync(CancellationToken cancellationToken);
+        public BookRepository Books { get; }
+        public AuthorRepository Authors { get; }
+
     }
 }

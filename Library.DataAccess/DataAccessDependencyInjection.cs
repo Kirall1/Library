@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Library.DataAccess.Repositories.Impl;
 using Library.DataAccess.Repositories;
+using Microsoft.EntityFrameworkCore.Proxies;
 
 namespace Library.DataAccess
 {
@@ -22,8 +23,11 @@ namespace Library.DataAccess
         private static void AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<DatabaseContext>(options =>
+            {
                 options.UseSqlServer(configuration["ConnectionString"],
-                    opt => opt.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName)));
+                    opt => opt.MigrationsAssembly(typeof(DatabaseContext).Assembly.FullName));
+                options.UseLazyLoadingProxies();
+            });
         }
 
         private static void AddUnitOfWork(this IServiceCollection services, IConfiguration configuration)
@@ -32,15 +36,14 @@ namespace Library.DataAccess
         }
 
         private static void AddRepositories(this IServiceCollection services, IConfiguration configuration)
-        { 
+        {
             services.AddScoped<IAuthorRepository, AuthorRepository>();
             services.AddScoped<IBookRepository, BookRepository>();
-            services.AddScoped<IGenreRepository, GenreRepository>();
         }
 
         private static void AddIdentity(this IServiceCollection services)
         {
-            services.AddIdentityCore<User>()
+            services.AddIdentityCore<ApplicationUser>()
                 .AddEntityFrameworkStores<DatabaseContext>();
         }
 

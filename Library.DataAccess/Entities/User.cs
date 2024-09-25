@@ -2,8 +2,9 @@
 
 namespace Library.DataAccess.Entities
 {
-    public class User : IdentityUser
+    public class ApplicationUser : IdentityUser<int>
     {
-
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }

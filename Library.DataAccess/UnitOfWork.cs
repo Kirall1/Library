@@ -1,5 +1,6 @@
-﻿using Library.DataAccess.Repositories.Impl;
-using Microsoft.EntityFrameworkCore;
+﻿using Library.DataAccess.Entities;
+using Library.DataAccess.Repositories.Impl;
+using Microsoft.AspNetCore.Identity;
 
 namespace Library.DataAccess
 {
@@ -8,7 +9,6 @@ namespace Library.DataAccess
         private DatabaseContext _dbContext;
         private BookRepository _bookRepository;
         private AuthorRepository _authorRepository;
-        private GenreRepository _genreRepository;
 
         public UnitOfWork(DatabaseContext dbContext)
         {
@@ -32,16 +32,6 @@ namespace Library.DataAccess
                 if (_authorRepository == null)
                     _authorRepository = new AuthorRepository(_dbContext);
                 return _authorRepository;
-            }
-        }
-
-        public GenreRepository Genres
-        {
-            get
-            {
-                if (_genreRepository == null)
-                    _genreRepository = new GenreRepository(_dbContext);
-                return (_genreRepository);
             }
         }
 
