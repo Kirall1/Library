@@ -1,14 +1,15 @@
 using System.Text;
-using Library.Business.Services.Impl;
-using Library.Business.Services;
+using Library.BusinessAccess.Services.Impl;
+using Library.BusinessAccess.Services;
 using Library.DataAccess;
 using Library.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using Library.Api.Middlewares;
 using FluentValidation;
-using Library.Business.MappingProfiles;
-using Library.Business.Models.Validators;
+using FluentValidation.AspNetCore;
+using Library.BusinessAccess.MappingProfiles;
+using Library.BusinessAccess.Models.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Cors.Infrastructure;
@@ -25,14 +26,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
 builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(IMapperMarker));
-builder.Services.AddSignalR();
+builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
 builder.Services.AddTransient<IFileService, FileService>();
 builder.Services.AddTransient<IBookService, BookService>();
 builder.Services.AddTransient<IAuthorService, AuthorService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IValidationService, ValidationService>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AuthenticatedUser", policy =>
@@ -40,6 +40,7 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireRole("Admin"));
+        
 });
 builder.Services.AddCors(options =>
     {

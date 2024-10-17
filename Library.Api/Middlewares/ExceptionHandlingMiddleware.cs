@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Library.Business.Exceptions;
+using Library.BusinessAccess.Exceptions;
 
 namespace Library.Api.Middlewares
 {
@@ -31,8 +31,9 @@ namespace Library.Api.Middlewares
                 {
                     BadRequestException => StatusCodes.Status400BadRequest,
                     NotFoundException => StatusCodes.Status404NotFound,
-                    ClientClosedRequest => StatusCodes.Status499ClientClosedRequest,
+                    ClientClosedRequestException => StatusCodes.Status499ClientClosedRequest,
                     UnprocessableRequestException => StatusCodes.Status422UnprocessableEntity,
+                    ConflictException => StatusCodes.Status409Conflict,
                     _ => StatusCodes.Status500InternalServerError
                 };
                 var problemDetails = new ProblemDetails

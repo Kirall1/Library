@@ -1,6 +1,7 @@
 ﻿using Library.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Library.BusinessObject;
 
 namespace Library.DataAccess.Repositories.Impl
 {

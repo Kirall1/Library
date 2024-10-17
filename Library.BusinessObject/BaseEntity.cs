@@ -1,0 +1,7 @@
+namespace Library.BusinessObject
+{
+    public class BaseEntity
+    {
+        public int Id { get; set; }
+    }
+}

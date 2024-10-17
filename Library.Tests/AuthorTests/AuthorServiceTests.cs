@@ -1,11 +1,10 @@
 using AutoMapper;
-using FluentValidation;
-using Library.Business.Exceptions;
-using Library.Business.Models.Author;
-using Library.Business.Services.Impl;
-using Library.Business.Services;
+using Library.BusinessAccess.Exceptions;
+using Library.BusinessAccess.Models.Author;
+using Library.BusinessAccess.Services.Impl;
+using Library.BusinessAccess.Services;
+using Library.BusinessObject;
 using Library.DataAccess;
-using Library.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -17,7 +16,6 @@ namespace Library.Tests.AuthorTests
     {
         private AuthorService _authorService;
         private Mock<IMapper> _mapperMock;
-        private Mock<IValidationService> _validationServiceMock;
         private IUnitOfWork _unitOfWork;
         private DatabaseContext _context;
 
@@ -31,9 +29,8 @@ namespace Library.Tests.AuthorTests
             _unitOfWork = new UnitOfWork(_context);
 
             _mapperMock = new Mock<IMapper>();
-            _validationServiceMock = new Mock<IValidationService>();
 
-            _authorService = new AuthorService(_unitOfWork, _mapperMock.Object, _validationServiceMock.Object);
+            _authorService = new AuthorService(_unitOfWork, _mapperMock.Object);
         }
 
         [TearDown]
@@ -78,7 +75,8 @@ namespace Library.Tests.AuthorTests
             _context.Authors.Add(author);
             await _context.SaveChangesAsync();
 
-            var expectedAuthor = new AuthorResponseDto { Id = 1, Name = "Author 1", Surname = "Surname 1", Country = "Country 1" };
+            var expectedAuthor = new AuthorResponseDto 
+                { Id = 1, Name = "Author 1", Surname = "Surname 1", Country = "Country 1" };
             _mapperMock.Setup(m => m.Map<AuthorResponseDto>(author)).Returns(expectedAuthor);
 
             // Act
@@ -99,7 +97,6 @@ namespace Library.Tests.AuthorTests
 
             _mapperMock.Setup(m => m.Map<Author>(authorCreateDto)).Returns(author);
             _mapperMock.Setup(m => m.Map<AuthorCreateResponseDto>(author)).Returns(authorCreateResponseDto);
-            _validationServiceMock.Setup(v => v.ValidateAsync(authorCreateDto, CancellationToken.None)).Returns(Task.CompletedTask);
 
             // Act
             var result = await _authorService.CreateAuthorAsync(authorCreateDto, CancellationToken.None);
@@ -132,8 +129,7 @@ namespace Library.Tests.AuthorTests
                            dest.Surname = src.Surname;
                            dest.Country = src.Country;
                        });
-
-            _validationServiceMock.Setup(v => v.ValidateAsync(authorUpdateDto, CancellationToken.None)).Returns(Task.CompletedTask);
+            
 
             // Act
             var result = await _authorService.UpdateAuthorAsync(authorUpdateDto, CancellationToken.None);

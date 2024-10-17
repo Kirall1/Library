@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Library.Business.Models;
-using Library.Business.Services;
+using Library.BusinessAccess.Models;
+using Library.BusinessAccess.Services;
 
 namespace Library.Api.Controllers
 {

@@ -1,7 +1,7 @@
-using Library.Business.Models.Author;
+using Library.BusinessAccess.Models.Author;
 using Microsoft.AspNetCore.Mvc;
-using Library.Business.Services;
-using Library.Business.Models;
+using Library.BusinessAccess.Services;
+using Library.BusinessAccess.Models;
 
 namespace Library.Api.Controllers
 {

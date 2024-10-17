@@ -1,4 +1,4 @@
-﻿using Library.DataAccess.Entities;
+﻿using Library.BusinessObject;
 
 namespace Library.DataAccess.Repositories.Impl
 {

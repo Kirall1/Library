@@ -1,5 +1,5 @@
-﻿using Library.DataAccess.Configurations.Constants;
-using Library.DataAccess.Entities;
+﻿using Library.BusinessObject;
+using Library.DataAccess.Configurations.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

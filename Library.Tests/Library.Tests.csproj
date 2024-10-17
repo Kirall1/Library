@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <Using Include="NUnit.Framework" />
-    <ProjectReference Include="..\Library.Business\Library.Business.csproj" />
+    <ProjectReference Include="..\Library.BusinessAccess\Library.BusinessAccess.csproj" />
     <ProjectReference Include="..\Library.DataAccess\Library.DataAccess.csproj" />
   </ItemGroup>
 

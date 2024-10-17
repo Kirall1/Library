@@ -1,6 +1,6 @@
-using Library.Business.Models;
-using Library.Business.Models.User;
-using Library.Business.Services;
+using Library.BusinessAccess.Models;
+using Library.BusinessAccess.Models.User;
+using Library.BusinessAccess.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Api.Controllers;

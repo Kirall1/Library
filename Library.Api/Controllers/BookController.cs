@@ -1,6 +1,6 @@
-﻿using Library.Business.Models.Book;
+﻿using Library.BusinessAccess.Models.Book;
 using Microsoft.AspNetCore.Mvc;
-using Library.Business.Services;
+using Library.BusinessAccess.Services;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Library.Api.Controllers
@@ -42,7 +42,8 @@ namespace Library.Api.Controllers
         }
 
         [HttpGet("author/{id:int}")]
-        public async Task<ActionResult<IEnumerable<BookBaseResponseDto>>> GetBooksByAuthor(int id, CancellationToken cancellationToken)
+        public async Task<ActionResult<IEnumerable<BookBaseResponseDto>>> GetBooksByAuthor(int id, 
+            CancellationToken cancellationToken)
         {
             return Ok(await _bookService.GetBooksByAuthorAsync(id, cancellationToken));
         }

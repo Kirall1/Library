@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Api", "Library.Api\
 		{B3E5638A-B13B-47CC-8A25-278A8A203FC6} = {B3E5638A-B13B-47CC-8A25-278A8A203FC6}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Business", "Library.Business\Library.Business.csproj", "{5FC25D61-373F-46AD-B544-B77735446485}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.BusinessAccess", "Library.BusinessAccess\Library.BusinessAccess.csproj", "{5FC25D61-373F-46AD-B544-B77735446485}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B3E5638A-B13B-47CC-8A25-278A8A203FC6} = {B3E5638A-B13B-47CC-8A25-278A8A203FC6}
 	EndProjectSection
@@ -17,6 +17,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.DataAccess", "Library.DataAccess\Library.DataAccess.csproj", "{B3E5638A-B13B-47CC-8A25-278A8A203FC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Tests", "Library.Tests\Library.Tests.csproj", "{A10112F7-EC2E-44C0-871B-FAB97E559328}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.BusinessObject", "Library.BusinessObject\Library.BusinessObject.csproj", "{CBE4FAA2-B021-4A0E-8921-1F2D32F50C8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +42,10 @@ Global
 		{A10112F7-EC2E-44C0-871B-FAB97E559328}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A10112F7-EC2E-44C0-871B-FAB97E559328}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A10112F7-EC2E-44C0-871B-FAB97E559328}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBE4FAA2-B021-4A0E-8921-1F2D32F50C8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBE4FAA2-B021-4A0E-8921-1F2D32F50C8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBE4FAA2-B021-4A0E-8921-1F2D32F50C8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBE4FAA2-B021-4A0E-8921-1F2D32F50C8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
