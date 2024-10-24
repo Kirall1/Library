@@ -1,8 +1,5 @@
 using System.Text;
-using Library.BusinessAccess.Services.Impl;
-using Library.BusinessAccess.Services;
 using Library.DataAccess;
-using Library.DataAccess.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.FileProviders;
 using Library.Api.Middlewares;
@@ -14,6 +11,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Library.Api;
+using Library.BusinessAccess;
+using Library.Shared;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,11 +27,7 @@ builder.Services.AddDataAccess(builder.Configuration);
 builder.Services.AddAutoMapper(typeof(IMapperMarker));
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<IValidationMarker>();
-builder.Services.AddTransient<IFileService, FileService>();
-builder.Services.AddTransient<IBookService, BookService>();
-builder.Services.AddTransient<IAuthorService, AuthorService>();
-builder.Services.AddTransient<ITokenService, TokenService>();
-builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddBALDependecyInjections();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AuthenticatedUser", policy =>

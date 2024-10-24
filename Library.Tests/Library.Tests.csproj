@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Library.Shared\Library.Shared.csproj" />
     <Using Include="NUnit.Framework" />
     <ProjectReference Include="..\Library.BusinessAccess\Library.BusinessAccess.csproj" />
     <ProjectReference Include="..\Library.DataAccess\Library.DataAccess.csproj" />

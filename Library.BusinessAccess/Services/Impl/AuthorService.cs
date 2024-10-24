@@ -2,72 +2,68 @@ using AutoMapper;
 using Library.BusinessAccess.Exceptions;
 using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.Author;
-using Library.BusinessObject;
-using Library.DataAccess;
+using Library.BusinessAccess.UseCases.Authors;
+using Library.Domain;
+using Library.Shared;
 
 namespace Library.BusinessAccess.Services.Impl
 {
     public class AuthorService : IAuthorService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        private readonly ICreateAuthorUseCase _createAuthorUseCase;
+        private readonly IDeleteAuthorUseCase _deleteAuthorUseCase;
+        private readonly IGetAuthorByIdUseCase _getAuthorByIdUseCase;
+        private readonly IGetAuthorsByPageUseCase _getAuthorsByPageUseCase;
+        private readonly IGetAuthorsUseCase _getAuthorsUseCase;
+        private readonly IUpdateAuthorUseCase _updateAuthorUseCase;
 
-        public AuthorService(IUnitOfWork unitOfWork, IMapper mapper)
+        public AuthorService(
+            ICreateAuthorUseCase createAuthorUseCase,
+            IDeleteAuthorUseCase deleteAuthorUseCase,
+            IGetAuthorByIdUseCase getAuthorByIdUseCase,
+            IGetAuthorsByPageUseCase getAuthorsByPageUseCase,
+            IGetAuthorsUseCase getAuthorsUseCase,
+            IUpdateAuthorUseCase updateAuthorUseCase)
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _createAuthorUseCase = createAuthorUseCase;
+            _deleteAuthorUseCase = deleteAuthorUseCase;
+            _getAuthorByIdUseCase = getAuthorByIdUseCase;
+            _getAuthorsByPageUseCase = getAuthorsByPageUseCase;
+            _getAuthorsUseCase = getAuthorsUseCase;
+            _updateAuthorUseCase = updateAuthorUseCase;
         }
 
         public async Task<IEnumerable<AuthorResponseDto>> GetAuthorsAsync(CancellationToken cancellationToken)
         {
-            var authors = await _unitOfWork.Authors.GetAllAsync(cancellationToken);
-            return _mapper.Map<IEnumerable<AuthorResponseDto>>(authors);
+            return await _getAuthorsUseCase.ExecuteAsync(cancellationToken);
         }
 
         public async Task<IEnumerable<AuthorResponseDto>> GetAuthorsByPageAsync(int page, int pageSize,
             CancellationToken cancellationToken)
         {
-            var authors = await _unitOfWork.Authors.GetByPageAsync(page, pageSize, cancellationToken);
-            return _mapper.Map<IEnumerable<AuthorResponseDto>>(authors);
+            return await _getAuthorsByPageUseCase.ExecuteAsync(page, pageSize, cancellationToken);
         }
 
         public async Task<AuthorResponseDto> GetAuthorByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(id, cancellationToken);
-            if (author == null)
-                throw new NotFoundException("Author not found");
-            return _mapper.Map<AuthorResponseDto>(author);
+            return await _getAuthorByIdUseCase.ExecuteAsync(id, cancellationToken);
         }
 
         public async Task<AuthorCreateResponseDto> CreateAuthorAsync(AuthorCreateDto authorCreateDto, 
             CancellationToken cancellationToken)
         {
-            var author = _mapper.Map<Author>(authorCreateDto);
-            var createdAuthor = await _unitOfWork.Authors.AddAsync(author, cancellationToken);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<AuthorCreateResponseDto>(createdAuthor);
+            return await _createAuthorUseCase.ExecuteAsync(authorCreateDto, cancellationToken);
         }
 
         public async Task<BaseResponseDto> UpdateAuthorAsync(AuthorUpdateDto authorUpdateDto, 
             CancellationToken cancellationToken)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(authorUpdateDto.Id, cancellationToken);
-            if (author == null)
-                throw new NotFoundException("Author not found");
-            _mapper.Map(authorUpdateDto, author);
-            var updatedAuthor = _unitOfWork.Authors.Update(author);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return new BaseResponseDto() { Id = updatedAuthor.Id };
+            return await _updateAuthorUseCase.ExecuteAsync(authorUpdateDto, cancellationToken);
         }
 
         public async Task<BaseResponseDto> DeleteAuthorAsync(int id, CancellationToken cancellationToken)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(id, cancellationToken);
-            if (author == null)
-                throw new NotFoundException("Author not found");
-            _unitOfWork.Authors.Delete(author);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return new BaseResponseDto() { Id = id };
+            return await _deleteAuthorUseCase.ExecuteAsync(id, cancellationToken);
         }
     }
 }

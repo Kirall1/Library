@@ -1,6 +1,6 @@
 using AutoMapper;
 using Library.BusinessAccess.Models.Author;
-using Library.BusinessObject;
+using Library.Domain;
 
 namespace Library.BusinessAccess.MappingProfiles
 {

@@ -1,7 +1,7 @@
-﻿using Library.DataAccess.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Library.BusinessObject;
+using Library.Domain;
+using Library.Domain.Repositories;
 
 namespace Library.DataAccess.Repositories.Impl
 {

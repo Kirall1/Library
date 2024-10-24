@@ -1,9 +1,8 @@
 ﻿using System.Linq.Expressions;
-using Library.BusinessObject;
 
-namespace Library.DataAccess.Repositories
+namespace Library.Domain.Repositories
 {
-    public interface IBaseRepository<TEntity> : IDisposable where TEntity: BaseEntity
+    public interface IBaseRepository<TEntity> : IDisposable where TEntity : BaseEntity
     {
         Task<TEntity> GetByIdAsync(int id, CancellationToken cancellationToken = default);
         Task<TEntity?> GetFirstByPredicateAsync(Expression<Func<TEntity, bool>> predicate,

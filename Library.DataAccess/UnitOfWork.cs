@@ -1,21 +1,21 @@
-﻿using Library.DataAccess.Entities;
-using Library.DataAccess.Repositories.Impl;
-using Microsoft.AspNetCore.Identity;
+﻿using Library.DataAccess.Repositories.Impl;
+using Library.Domain.Repositories;
+using Library.Shared;
 
 namespace Library.DataAccess
 {
     public class UnitOfWork : IUnitOfWork
     {
         private DatabaseContext _dbContext;
-        private BookRepository _bookRepository;
-        private AuthorRepository _authorRepository;
+        private IBookRepository _bookRepository;
+        private IAuthorRepository _authorRepository;
 
         public UnitOfWork(DatabaseContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public BookRepository Books
+        public IBookRepository Books
         {
             get
             {
@@ -25,7 +25,7 @@ namespace Library.DataAccess
             }
         }
 
-        public AuthorRepository Authors
+        public IAuthorRepository Authors
         {
             get
             {

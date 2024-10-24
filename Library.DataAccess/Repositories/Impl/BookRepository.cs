@@ -1,5 +1,6 @@
-﻿using Library.BusinessObject;
+﻿using Library.Domain;
 using Microsoft.EntityFrameworkCore;
+using Library.Domain.Repositories;
 
 namespace Library.DataAccess.Repositories.Impl
 {

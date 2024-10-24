@@ -1,7 +1,4 @@
-﻿using Library.DataAccess.Entities;
-using Microsoft.AspNetCore.Http;
-
-namespace Library.BusinessAccess.Models.Book
+﻿namespace Library.BusinessAccess.Models.Book
 {
     public class BookBaseResponseDto : BaseResponseDto
     {

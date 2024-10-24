@@ -1,141 +1,95 @@
-﻿using AutoMapper;
-using Library.DataAccess;
-using Library.DataAccess.Entities;
-using Microsoft.AspNetCore.Identity;
-using Library.BusinessAccess.Exceptions;
-using Library.BusinessAccess.Models;
+﻿using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.Book;
-using Library.BusinessObject;
+using Library.BusinessAccess.UseCases.Books;
 
 namespace Library.BusinessAccess.Services.Impl
 {
     public class BookService : IBookService
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IFileService _fileService;
-        private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IGetBooksUseCase _getBooksUseCase;
+        private readonly IGetBookByIdUseCase _getBookByIdUseCase;
+        private readonly IAddBookUseCase _addBookUseCase;
+        private readonly IEditBookUseCase _editBookUseCase;
+        private readonly IDeleteBookUseCase _deleteBookUseCase;
+        private readonly ITakeBookUseCase _takeBookUseCase;
+        private readonly IReturnBookUseCase _returnBookUseCase;
+        private readonly IGetBooksByAuthorUseCase _getBooksByAuthorUseCase;
+        private readonly IGetBooksByPageUseCase _getBooksByPageUseCase;
+        private readonly IGetBookByIsbnUseCase _getBookByIsbnUseCase;
 
-        public BookService(IUnitOfWork unitOfWork, IFileService fileService,
-            IMapper mapper, UserManager<ApplicationUser> userManager)
+        public BookService(
+            IGetBooksUseCase getBooksUseCase,
+            IGetBookByIdUseCase getBookByIdUseCase,
+            IAddBookUseCase addBookUseCase,
+            IEditBookUseCase editBookUseCase,
+            IDeleteBookUseCase deleteBookUseCase,
+            ITakeBookUseCase takeBookUseCase,
+            IReturnBookUseCase returnBookUseCase,
+            IGetBooksByAuthorUseCase getBooksByAuthorUseCase,
+            IGetBooksByPageUseCase getBooksByPageUseCase,
+            IGetBookByIsbnUseCase getBookByIsbnUseCase)
         {
-            _unitOfWork = unitOfWork;
-            _fileService = fileService;
-            _mapper = mapper;
-            _userManager = userManager;
+            _getBooksUseCase = getBooksUseCase;
+            _getBookByIdUseCase = getBookByIdUseCase;
+            _addBookUseCase = addBookUseCase;
+            _editBookUseCase = editBookUseCase;
+            _deleteBookUseCase = deleteBookUseCase;
+            _takeBookUseCase = takeBookUseCase;
+            _returnBookUseCase = returnBookUseCase;
+            _getBooksByAuthorUseCase = getBooksByAuthorUseCase;
+            _getBooksByPageUseCase = getBooksByPageUseCase;
+            _getBookByIsbnUseCase = getBookByIsbnUseCase;
         }
 
-        public async Task<IEnumerable<BookBaseResponseDto>> GetBooksAsync(CancellationToken cancellationToken)
+        public Task<IEnumerable<BookBaseResponseDto>> GetBooksAsync(CancellationToken cancellationToken)
         {
-            var books = await _unitOfWork.Books.GetAllAsync(cancellationToken);
-            return _mapper.Map<IEnumerable<BookBaseResponseDto>>(books);
+            return _getBooksUseCase.ExecuteAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<BookBaseResponseDto>> GetBooksByPageAsync(int page, int pageSize,
-            CancellationToken cancellationToken)
+        public Task<IEnumerable<BookBaseResponseDto>> GetBooksByPageAsync(int page, int pageSize, CancellationToken cancellationToken)
         {
-            var books = await _unitOfWork.Books.GetByPageAsync(page, pageSize, cancellationToken);
-            return _mapper.Map<IEnumerable<BookBaseResponseDto>>(books);
+            return _getBooksByPageUseCase.ExecuteAsync(page, pageSize, cancellationToken);
         }
 
-        public async Task<BookDetailedResponseDto> GetBookByIdAsync(int id, CancellationToken cancellationToken)
+        public Task<BookDetailedResponseDto> GetBookByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var book = await _unitOfWork.Books.GetByIdAsync(id, cancellationToken);
-            if (book == null)
-                throw new NotFoundException("Book not found");
-            return _mapper.Map<BookDetailedResponseDto>(book);
+            return _getBookByIdUseCase.ExecuteAsync(id, cancellationToken);
         }
 
-        public async Task<BookBaseResponseDto> GetBookByIsbnAsync(string isbn, CancellationToken cancellationToken)
+        public Task<BookBaseResponseDto> GetBookByIsbnAsync(string isbn, CancellationToken cancellationToken)
         {
-            var book = await _unitOfWork.Books.GetByIsbnAsync(isbn, cancellationToken);
-            if (book == null)
-                throw new NotFoundException("Book not found");
-            return _mapper.Map<BookDetailedResponseDto>(book);
+            return _getBookByIsbnUseCase.ExecuteAsync(isbn, cancellationToken);
         }
 
-        public async Task<BookCreateResponseDto> AddBookAsync(BookCreateDto bookToCreate,
-            CancellationToken cancellationToken)
+        public Task<BookCreateResponseDto> AddBookAsync(BookCreateDto bookToCreate, CancellationToken cancellationToken)
         {
-            if ((await _unitOfWork.Books.GetByIsbnAsync(bookToCreate.Isbn, cancellationToken)) != null)
-            {
-                throw new ConflictException("Book with this ISBN already exists");
-            }
-            var imagePath = string.Empty;
-            if (bookToCreate.ImageFile != null)
-                imagePath = await _fileService.SaveFileAsync(bookToCreate.ImageFile, ["png", "jpg", "jpeg"], cancellationToken);
-
-            var book = _mapper.Map<Book>(bookToCreate);
-
-            if (imagePath != string.Empty)
-                book.Image = imagePath;
-            book = await _unitOfWork.Books.AddAsync(book);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return _mapper.Map<BookCreateResponseDto>(book);
+            return _addBookUseCase.ExecuteAsync(bookToCreate, cancellationToken);
         }
 
-        public async Task<BaseResponseDto> EditBookAsync(BookUpdateDto bookToUpdate,
-            CancellationToken cancellationToken)
+        public Task<BaseResponseDto> EditBookAsync(BookUpdateDto bookToUpdate, CancellationToken cancellationToken)
         {
-            var book = await _unitOfWork.Books.GetByIdAsync(bookToUpdate.Id, cancellationToken);
-            if (book == null)
-                throw new NotFoundException("Book not found");
-
-            _mapper.Map(bookToUpdate, book);
-
-
-            if (bookToUpdate.ImageFile != null)
-            {
-                var imagePath = await _fileService.SaveFileAsync(bookToUpdate.ImageFile,
-                    ["png", "jpg", "jpeg"], cancellationToken);
-
-                if (book.Image != null)
-                    _fileService.DeleteFile(book.Image);
-                book.Image = imagePath;
-            }
-            _unitOfWork.Books.Update(book);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return new BaseResponseDto() { Id = book.Id };
+            return _editBookUseCase.ExecuteAsync(bookToUpdate, cancellationToken);
         }
 
-        public async Task<BaseResponseDto> DeleteBookAsync(int id, CancellationToken cancellationToken)
+        public Task<BaseResponseDto> DeleteBookAsync(int id, CancellationToken cancellationToken)
         {
-            var book = await _unitOfWork.Books.GetByIdAsync(id, cancellationToken);
-            if (book == null)
-                throw new NotFoundException("Book not found");
-            if (book.Image != null)
-                _fileService.DeleteFile(book.Image);
-            _unitOfWork.Books.Delete(book);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return new BaseResponseDto() { Id = id };
+            return _deleteBookUseCase.ExecuteAsync(id, cancellationToken);
         }
 
-        public async Task<BaseResponseDto> TakeBookAsync(BookTakeReturnDto bookToTake,
-            CancellationToken cancellationToken)
+        public Task<BaseResponseDto> TakeBookAsync(BookTakeReturnDto bookToTake, CancellationToken cancellationToken)
         {
-            var book = await _unitOfWork.Books.GetByIdAsync(bookToTake.Id, cancellationToken);
-            book.TakeBook(bookToTake.UserId);
-            _unitOfWork.Books.Update(book);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return new BaseResponseDto() { Id = book.Id };
+            return _takeBookUseCase.ExecuteAsync(bookToTake, cancellationToken);
         }
 
-        public async Task<BaseResponseDto> ReturnBookAsync(BookTakeReturnDto bookToReturn,
-            CancellationToken cancellationToken)
+        public Task<BaseResponseDto> ReturnBookAsync(BookTakeReturnDto bookToReturn, CancellationToken cancellationToken)
         {
-            var book = await _unitOfWork.Books.GetByIdAsync(bookToReturn.Id, cancellationToken);
-            book.ReturnBook();
-            _unitOfWork.Books.Update(book);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-            return new BaseResponseDto() { Id = book.Id };
+            return _returnBookUseCase.ExecuteAsync(bookToReturn, cancellationToken);
         }
 
-        public async Task<IEnumerable<BookBaseResponseDto>> GetBooksByAuthorAsync(int authorId,
-            CancellationToken cancellationToken)
+        public Task<IEnumerable<BookBaseResponseDto>> GetBooksByAuthorAsync(int authorId, CancellationToken cancellationToken)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(authorId, cancellationToken);
-            var books = author.Books;
-            return _mapper.Map<IEnumerable<BookBaseResponseDto>>(books);
+            return _getBooksByAuthorUseCase.ExecuteAsync(authorId, cancellationToken);
         }
     }
+
 }

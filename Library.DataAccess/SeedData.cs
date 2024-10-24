@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
-using Library.BusinessObject;
-using Library.DataAccess.Entities;
+using Library.Domain;
+using Library.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

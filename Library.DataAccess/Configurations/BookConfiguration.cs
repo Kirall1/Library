@@ -1,4 +1,4 @@
-﻿using Library.BusinessObject;
+﻿using Library.Domain;
 using Library.DataAccess.Configurations.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

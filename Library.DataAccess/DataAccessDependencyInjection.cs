@@ -1,10 +1,9 @@
-﻿using Library.DataAccess.Entities;
+﻿using Library.Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Library.DataAccess.Repositories.Impl;
-using Library.DataAccess.Repositories;
-using Microsoft.EntityFrameworkCore.Proxies;
+using Library.Shared;
 
 namespace Library.DataAccess
 {

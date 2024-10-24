@@ -1,4 +1,5 @@
-﻿using Library.BusinessObject;
+﻿using Library.Domain;
+using Library.Domain.Repositories;
 
 namespace Library.DataAccess.Repositories.Impl
 {

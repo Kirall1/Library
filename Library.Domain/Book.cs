@@ -1,4 +1,4 @@
-﻿namespace Library.BusinessObject
+﻿namespace Library.Domain
 {
     public class Book : BaseEntity
     {

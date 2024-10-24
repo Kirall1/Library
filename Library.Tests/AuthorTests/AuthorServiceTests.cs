@@ -2,9 +2,10 @@ using AutoMapper;
 using Library.BusinessAccess.Exceptions;
 using Library.BusinessAccess.Models.Author;
 using Library.BusinessAccess.Services.Impl;
-using Library.BusinessAccess.Services;
-using Library.BusinessObject;
+using Library.BusinessAccess.UseCases.Authors.Impl;
+using Library.Domain;
 using Library.DataAccess;
+using Library.Shared;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
@@ -30,7 +31,13 @@ namespace Library.Tests.AuthorTests
 
             _mapperMock = new Mock<IMapper>();
 
-            _authorService = new AuthorService(_unitOfWork, _mapperMock.Object);
+            _authorService = new AuthorService(
+                new CreateAuthorUseCase(_mapperMock.Object, _unitOfWork),
+                new DeleteAuthorUseCase(_unitOfWork),
+                new GetAuthorByIdUseCase(_mapperMock.Object, _unitOfWork),
+                new GetAuthorsByPageUseCase(_mapperMock.Object, _unitOfWork),
+                new GetAuthorsUseCase(_mapperMock.Object, _unitOfWork),
+                new UpdateAuthorUseCase(_mapperMock.Object, _unitOfWork));
         }
 
         [TearDown]

@@ -1,7 +1,7 @@
 using FluentValidation;
 using Library.BusinessAccess.Models.User;
 using Microsoft.AspNetCore.Identity;
-using Library.DataAccess.Entities;
+using Library.Shared;
 
 namespace Library.BusinessAccess.Models.Validators.User
 {

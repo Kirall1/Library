@@ -1,6 +1,6 @@
 using AutoMapper;
-using Library.DataAccess.Entities;
 using Library.BusinessAccess.Models.User;
+using Library.Shared;
 
 namespace Library.BusinessAccess.MappingProfiles
 {

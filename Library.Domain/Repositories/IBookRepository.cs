@@ -1,6 +1,4 @@
-﻿using Library.BusinessObject;
-
-namespace Library.DataAccess.Repositories
+﻿namespace Library.Domain.Repositories
 {
     public interface IBookRepository : IBaseRepository<Book>
     {

@@ -1,9 +1,9 @@
-﻿using Library.DataAccess.Entities;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using Library.BusinessObject;
+using Library.Domain;
+using Library.Shared;
 
 namespace Library.DataAccess
 {
