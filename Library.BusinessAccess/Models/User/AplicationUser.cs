@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Library.Shared
+namespace Library.BusinessAccess.Models.User
 {
     public class ApplicationUser : IdentityUser<int>
     {

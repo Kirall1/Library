@@ -1,8 +1,8 @@
 using AutoMapper;
 using Library.BusinessAccess.Exceptions;
+using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.Book;
 using Library.BusinessAccess.Services;
-using Library.Shared;
 using Library.Domain;
 
 namespace Library.BusinessAccess.UseCases.Books.Impl;

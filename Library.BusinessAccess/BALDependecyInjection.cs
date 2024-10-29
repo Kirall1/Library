@@ -13,8 +13,6 @@ public static class BALDependecyInjection
     public static IServiceCollection AddBALDependecyInjections(this IServiceCollection services)
     {
         services.AddTransient<IFileService, FileService>();
-        services.AddTransient<IBookService, BookService>();
-        services.AddTransient<IAuthorService, AuthorService>();
         services.AddTransient<ITokenService, TokenService>();
         services.AddTransient<IUserService, UserService>();
         

@@ -24,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Library.BusinessAccess\Library.BusinessAccess.csproj" />
     <ProjectReference Include="..\Library.DataAccess\Library.DataAccess.csproj" />
-    <ProjectReference Include="..\Library.Shared\Library.Shared.csproj" />
   </ItemGroup>
 
 </Project>

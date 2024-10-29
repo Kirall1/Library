@@ -2,7 +2,6 @@ using System.Security.Claims;
 using AutoMapper;
 using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.User;
-using Library.Shared;
 using Microsoft.AspNetCore.Identity;
 
 namespace Library.BusinessAccess.Services.Impl

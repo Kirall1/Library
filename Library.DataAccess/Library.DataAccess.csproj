@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Library.BusinessAccess\Library.BusinessAccess.csproj" />
     <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
-    <ProjectReference Include="..\Library.Shared\Library.Shared.csproj" />
   </ItemGroup>
 
 </Project>

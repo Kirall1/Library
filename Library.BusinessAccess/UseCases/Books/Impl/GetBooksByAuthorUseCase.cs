@@ -1,6 +1,6 @@
 using AutoMapper;
+using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.Book;
-using Library.Shared;
 
 namespace Library.BusinessAccess.UseCases.Books.Impl;
 

@@ -1,7 +1,7 @@
 using AutoMapper;
+using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.Author;
 using Library.Domain;
-using Library.Shared;
 
 namespace Library.BusinessAccess.UseCases.Authors.Impl;
 

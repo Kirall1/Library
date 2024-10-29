@@ -12,7 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Library.Api;
 using Library.BusinessAccess;
-using Library.Shared;
+using Library.BusinessAccess.Models;
+using Library.BusinessAccess.Models.User;
 
 
 var builder = WebApplication.CreateBuilder(args);

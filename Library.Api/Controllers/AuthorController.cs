@@ -1,7 +1,7 @@
 using Library.BusinessAccess.Models.Author;
 using Microsoft.AspNetCore.Mvc;
-using Library.BusinessAccess.Services;
 using Library.BusinessAccess.Models;
+using Library.BusinessAccess.UseCases.Authors;
 
 namespace Library.Api.Controllers
 {
@@ -9,31 +9,49 @@ namespace Library.Api.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly IAuthorService _authorService;
+        private readonly ICreateAuthorUseCase _createAuthorUseCase;
+        private readonly IDeleteAuthorUseCase _deleteAuthorUseCase;
+        private readonly IGetAuthorByIdUseCase _getAuthorByIdUseCase;
+        private readonly IGetAuthorsByPageUseCase _getAuthorsByPageUseCase;
+        private readonly IGetAuthorsUseCase _getAuthorsUseCase;
+        private readonly IUpdateAuthorUseCase _updateAuthorUseCase;
 
-        public AuthorController(IAuthorService authorService)
+        public AuthorController(
+            ICreateAuthorUseCase createAuthorUseCase,
+            IDeleteAuthorUseCase deleteAuthorUseCase,
+            IGetAuthorByIdUseCase getAuthorByIdUseCase,
+            IGetAuthorsByPageUseCase getAuthorsByPageUseCase,
+            IGetAuthorsUseCase getAuthorsUseCase,
+            IUpdateAuthorUseCase updateAuthorUseCase
+            )
         {
-            _authorService = authorService;
+            _createAuthorUseCase = createAuthorUseCase;
+            _deleteAuthorUseCase = deleteAuthorUseCase;
+            _getAuthorByIdUseCase = getAuthorByIdUseCase;
+            _getAuthorsByPageUseCase = getAuthorsByPageUseCase;
+            _getAuthorsUseCase = getAuthorsUseCase;
+            _updateAuthorUseCase = updateAuthorUseCase;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AuthorResponseDto>>> GetAuthors(CancellationToken cancellationToken)
         {
-            return Ok(await _authorService.GetAuthorsAsync(cancellationToken));
+            return Ok(await _getAuthorsUseCase.ExecuteAsync(cancellationToken));
         }
 
+        
         [HttpGet("{page}/{pageSize}")]
         public async Task<ActionResult<IEnumerable<AuthorResponseDto>>> GetAuthorsByPage(int page, int pageSize,
         CancellationToken cancellationToken)
         {
-            return Ok(await _authorService.GetAuthorsByPageAsync(page, pageSize, cancellationToken));
+            return Ok(await _getAuthorsByPageUseCase.ExecuteAsync(page, pageSize, cancellationToken));
         }
 
 
         [HttpGet("{id}")]
         public async Task<ActionResult<AuthorResponseDto>> GetAuthorById(int id, CancellationToken cancellationToken)
         {
-            return Ok(await _authorService.GetAuthorByIdAsync(id, cancellationToken));
+            return Ok(await _getAuthorByIdUseCase.ExecuteAsync(id, cancellationToken));
         }
 
 
@@ -41,7 +59,7 @@ namespace Library.Api.Controllers
         public async Task<ActionResult<AuthorCreateResponseDto>> CreateAuthor([FromForm] AuthorCreateDto author,
             CancellationToken cancellationToken)
         {
-            return Ok(await _authorService.CreateAuthorAsync(author, cancellationToken));
+            return Ok(await _createAuthorUseCase.ExecuteAsync(author, cancellationToken));
         }
 
 
@@ -50,13 +68,13 @@ namespace Library.Api.Controllers
         public async Task<ActionResult<BaseResponseDto>> UpdateAuthor([FromForm] AuthorUpdateDto author,
             CancellationToken cancellationToken)
         {
-            return Ok(await _authorService.UpdateAuthorAsync(author, cancellationToken));
+            return Ok(await _updateAuthorUseCase.ExecuteAsync(author, cancellationToken));
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<BaseResponseDto>> DeleteAuthor(int id, CancellationToken cancellationToken)
         {
-            return Ok(await _authorService.DeleteAuthorAsync(id, cancellationToken));
+            return Ok(await _deleteAuthorUseCase.ExecuteAsync(id, cancellationToken));
         }
     }
 }

@@ -1,6 +1,5 @@
 using Library.BusinessAccess.Exceptions;
 using Library.BusinessAccess.Models;
-using Library.Shared;
 
 namespace Library.BusinessAccess.UseCases.Authors.Impl;
 

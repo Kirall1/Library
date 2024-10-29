@@ -12,11 +12,12 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.2" />
+	<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Library.DataAccess\Library.DataAccess.csproj" />
-    <ProjectReference Include="..\Library.Shared\Library.Shared.csproj" />
+    <ProjectReference Include="..\Library.Domain\Library.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
-﻿using Library.DataAccess.Repositories.Impl;
+﻿using Library.BusinessAccess.Models;
+using Library.DataAccess.Repositories.Impl;
 using Library.Domain.Repositories;
-using Library.Shared;
 
 namespace Library.DataAccess
 {

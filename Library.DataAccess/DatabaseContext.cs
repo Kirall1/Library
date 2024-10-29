@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Library.BusinessAccess.Models.User;
 using Library.Domain;
-using Library.Shared;
 
 namespace Library.DataAccess
 {

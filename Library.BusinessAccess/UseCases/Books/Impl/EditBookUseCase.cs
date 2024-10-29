@@ -3,7 +3,6 @@ using Library.BusinessAccess.Exceptions;
 using Library.BusinessAccess.Models;
 using Library.BusinessAccess.Models.Book;
 using Library.BusinessAccess.Services;
-using Library.Shared;
 
 namespace Library.BusinessAccess.UseCases.Books.Impl;
 

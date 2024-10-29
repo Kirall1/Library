@@ -1,9 +1,10 @@
-﻿using Library.Domain.Repositories;
+﻿using Library.BusinessAccess.Models;
+using Library.BusinessAccess.Models.User;
+using Library.Domain.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Library.DataAccess.Repositories.Impl;
-using Library.Shared;
 
 namespace Library.DataAccess
 {
